@@ -26,7 +26,6 @@ class QAModel(nn.Module):
     def forward(self, pool_features):
         # pool_features: N x T x C
         N = pool_features.size(0)
-#         print(pool_features.shape)
         df = self.dr(pool_features) # N x T x reduced_size
         pf, _ = self.fp(df, self._get_initial_state(N, df.device)) # N x T x hidden_size
         q = self.regression(pf) # N x T x 1

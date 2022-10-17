@@ -74,9 +74,9 @@ if __name__ == "__main__":
     parser.add_argument('--arch', default='resnet50', type=str,
                         help='')
     parser.add_argument('--pool_mode', default='mean', type=str,
-                        help='pool mode (default: mean, ..., mean+std, std)')
+                        help='pool mode (default: mean)')
     parser.add_argument('-fim', '--fe_init_mode', type=int, default=3,
-                        help='fe network init mode (default: 0 for default random, 1 for ImageNet-pretrained, 2 for iqa-pretrained, 3 for iqa-finetuned)')
+                        help='fe network init mode, 0 for default random, 1 for ImageNet-pretrained, 2 for iqa-pretrained, 3 for iqa-finetuned (default: 3)')
     parser.add_argument('--dataset', default='KoNViD-1k', type=str,
                         help='')
     args = parser.parse_args()
@@ -129,10 +129,7 @@ if __name__ == "__main__":
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     extractor = QAModel(arch=args.arch, returnFeature=True, pool_mode=args.pool_mode).to(device)  #
-    try:
-        checkpoint = torch.load(args.checkpoint)
-    except:
-        checkpoint = torch.load(args.checkpoint.replace('pmode=mean-', ''))
+    checkpoint = torch.load(args.checkpoint)
     extractor.load_state_dict(checkpoint['model'])
     extractor.eval()
     

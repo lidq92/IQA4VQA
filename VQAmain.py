@@ -5,11 +5,11 @@ import random
 import datetime
 import numpy as np
 from QAloss import QALoss
-from VQAmodel import QAModel, WholeQAModel
 from ignite.engine import Events
 from argparse import ArgumentParser
 from VQAdataset import get_data_loaders
 from QAperformance import QAPerformance
+from VQAmodel import QAModel, WholeQAModel
 from torch.optim import Adam, lr_scheduler
 from torch.utils.tensorboard import SummaryWriter
 from modified_ignite_engine import create_supervised_evaluator, create_supervised_trainer
@@ -27,10 +27,7 @@ def run(args):
     logger.log.info(model)
 
     if args.checkpoint is not None:
-        try:
-            model.load_state_dict(torch.load(args.checkpoint)['model'])
-        except:
-            model.load_state_dict(torch.load(args.checkpoint.replace('pmode=mean-', ''))['model'])
+        model.load_state_dict(torch.load(args.checkpoint)['model'])
     if args.whole:
         optimizer = Adam([{'params': model.regression.parameters()}, 
                           {'params': model.fp.parameters()},
@@ -116,19 +113,19 @@ if __name__ == "__main__":
     parser.add_argument('--arch', default='resnet50', type=str,
                         help='')
     parser.add_argument('--pool_mode', default='mean', type=str,
-                        help='pool mode (default: mean, ..., mean+std, std)')
+                        help='pool mode (default: mean)')
     parser.add_argument('-fim', '--fe_init_mode', type=int, default=3,
-                        help='fe network init mode (default: 0 for default random, 1 for ImageNet-pretrained, 2 for iqa-pretrained, 3 for iqa-finetuned)')
+                        help='fe network init mode, 0 for default random, 1 for ImageNet-pretrained, 2 for iqa-pretrained, 3 for iqa-finetuned (default: 3)')
     parser.add_argument('-rim', '--re_init_mode', type=int, default=1,
-                        help='re network init mode (default: 0 for default random, 1 for iqa-pretrained)')
+                        help='re network init mode, 0 for default random, 1 for iqa-pretrained (default: 1)')
     parser.add_argument('-g', '--groups', type=int, default=16,
                         help='number of cube groups in a video (default: 16)')
     parser.add_argument('-lr', '--lr', type=float, default=1e-4,
-                        help='learning rate (default: )')
+                        help='learning rate (default: 1e-4)')
     parser.add_argument('-bs', '--batch_size', type=int, default=8,
-                        help='input batch size for training (default: )')
+                        help='input batch size for training (default: 8)')
     parser.add_argument('-e', '--epochs', type=int, default=30,
-                        help='number of epochs to train (default: )')
+                        help='number of epochs to train (default: 30)')
     parser.add_argument('-wd', '--weight_decay', type=float, default=0.0,
                         help='weight decay (default: 0.0)')
     parser.add_argument('--inference', action='store_true',
@@ -194,9 +191,3 @@ if __name__ == "__main__":
     logger.create_logger('logs', args.format_str, False)
     logger.log.info(args)
     run(args)
-
-
-
-
-
-

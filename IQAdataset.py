@@ -64,9 +64,7 @@ def get_data_loaders(args):
                               pin_memory=True) 
     val_dataset = IQADataset(args, 'val')
     test_dataset = IQADataset(args, 'test')
-    val_loader = DataLoader(val_dataset,
-                              batch_size=2*args.batch_size)    
-    test_loader = DataLoader(test_dataset,
-                              batch_size=2*args.batch_size)
+    val_loader = DataLoader(val_dataset, batch_size=2*args.batch_size)    
+    test_loader = DataLoader(test_dataset, batch_size=2*args.batch_size)
     
     return train_loader, val_loader, test_loader

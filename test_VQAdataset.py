@@ -1,15 +1,15 @@
-import torch
-from ignite.engine import Events
-from modified_ignite_engine import create_supervised_trainer, create_supervised_evaluator
-from VQAdataset import VQADataset
-from torch.utils.data import DataLoader
-from VQAmodel import QAModel
-from QAperformance import QAPerformance
 import os
-import numpy as np
+import torch
 import random
 import logger
+import numpy as np
+from VQAmodel import QAModel
+from ignite.engine import Events
+from VQAdataset import VQADataset
 from argparse import ArgumentParser
+from torch.utils.data import DataLoader
+from QAperformance import QAPerformance
+from modified_ignite_engine import create_supervised_evaluator
 
 
 def run(args):
@@ -18,11 +18,7 @@ def run(args):
     features_path = 'LIVEVQC-features-{}-fe_init_mode-{}/'.format(args.arch, args.fe_init_mode)  
     test_dataset = VQADataset(features_path, list(range(args.dataset_len)), feature_extractor=args.arch, groups=args.groups)
     test_loader = DataLoader(test_dataset, batch_size=2*args.batch_size)
-    
-    try:
-        checkpoint = torch.load(args.trained_model_file)
-    except:
-        checkpoint = torch.load(args.trained_model_file.replace('g=16-', ''))
+    checkpoint = torch.load(args.trained_model_file)
     model.load_state_dict(checkpoint)
     evaluator = create_supervised_evaluator(model, metrics={'VQA_performance': QAPerformance()}, device=device)
     evaluator.run(test_loader)
@@ -42,25 +38,23 @@ if __name__ == "__main__":
     parser.add_argument('--arch', default='resnet50', type=str,
                         help='')
     parser.add_argument('--pool_mode', default='mean', type=str,
-                        help='pool mode (default: mean, ..., mean+std, std)')
+                        help='pool mode (default: mean)')
     parser.add_argument('-fim', '--fe_init_mode', type=int, default=3,
-                        help='fe network init mode (default: 0 for default random, 1 for ImageNet-pretrained, 2 for iqa-pretrained, 3 for iqa-finetuned)')
+                        help='fe network init mode, 0 for default random, 1 for ImageNet-pretrained, 2 for iqa-pretrained, 3 for iqa-finetuned (default: 3)')
     parser.add_argument('-rim', '--re_init_mode', type=int, default=1,
-                        help='re network init mode (default: 0 for default random, 1 for iqa-pretrained)')
+                        help='re network init mode, 0 for default random, 1 for iqa-pretrained (default: 1)')
     parser.add_argument('-g', '--groups', type=int, default=16,
                         help='number of cube groups in a video (default: 16)')
     parser.add_argument('-lr', '--lr', type=float, default=1e-4,
-                        help='learning rate (default: )')
+                        help='learning rate (default: 1e-4)')
     parser.add_argument('-bs', '--batch_size', type=int, default=8,
-                        help='input batch size for training (default: )')
+                        help='input batch size for training (default: 8)')
     parser.add_argument('-e', '--epochs', type=int, default=30,
-                        help='number of epochs to train (default: )')
+                        help='number of epochs to train (default: 30)')
     parser.add_argument('-wd', '--weight_decay', type=float, default=0.0,
                         help='weight decay (default: 0.0)')
-    
     parser.add_argument('-random', '--randomness', action='store_true',
                         help='Allow randomness during training?') 
-    
     parser.add_argument('--trained_model_file', default=None, type=str,
                         help='trained_model_file')
     

@@ -44,8 +44,6 @@ def run(args):
     
     train_loader, val_loader, test_loader = get_data_loaders(args)
 
-
-
     evaluator = create_supervised_evaluator(model, metrics={'IQA_performance': QAPerformance()}, device=device)
     if args.evaluate:
         checkpoint = torch.load(args.trained_model_file)
@@ -128,12 +126,12 @@ if __name__ == "__main__":
     parser.add_argument("--exp_id", type=int, default=0,
                         help='the exp split idx (default: 0)')
     parser.add_argument("--model", type=str, default='IQA')
-    parser.add_argument('--arch', default='resnet50', type=str,
-                        help='arch name (default: ... resnext101_32x8d)')
+    parser.add_argument('--arch', default='resnext101_32x8d', type=str,
+                        help='arch name (default: resnext101_32x8d)')
     parser.add_argument('--pool_mode', default='mean', type=str,
-                        help='pool mode (default: mean, ..., mean+std, std)')
+                        help='pool mode (default: mean)')
     parser.add_argument('-pretrained', '--pretrained', type=int, default=1,
-                        help='fe network init mode (default: 0 for default random, 1 for ImageNet-pretrained)')
+                        help='feature extractor (fe) network init mode， 0 for default random, 1 for ImageNet-pretrained (default: 1)')
     parser.add_argument('-lr', '--lr', type=float, default=1e-4,
                         help='learning rate (default: 1e-4)')
     parser.add_argument('-bs', '--batch_size', type=int, default=8,

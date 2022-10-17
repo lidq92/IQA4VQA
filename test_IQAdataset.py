@@ -1,16 +1,15 @@
-import torch
-from ignite.engine import Events
-from modified_ignite_engine import create_supervised_trainer, create_supervised_evaluator
-from IQAdataset import IQADataset
-from torch.utils.data import DataLoader
-from IQAmodel import QAModel
-from QAloss import QALoss
-from QAperformance import QAPerformance
 import os
-import numpy as np
+import torch
 import random
 import logger
+import numpy as np
+from IQAmodel import QAModel
+from ignite.engine import Events
+from IQAdataset import IQADataset
 from argparse import ArgumentParser
+from torch.utils.data import DataLoader
+from QAperformance import QAPerformance
+from modified_ignite_engine import create_supervised_evaluator
 
 
 def run(args):
@@ -18,11 +17,7 @@ def run(args):
     model = QAModel(arch=args.arch, pretrained=args.pretrained, pool_mode=args.pool_mode).to(device)  #
     test_dataset = IQADataset(args, 'test')
     test_loader = DataLoader(test_dataset, batch_size=2*args.batch_size, num_workers=16)
-
-    try:
-        checkpoint = torch.load(args.trained_model_file)
-    except:
-        checkpoint = torch.load(args.trained_model_file.replace('pmode=mean-', ''))
+    checkpoint = torch.load(args.trained_model_file)
     model.load_state_dict(checkpoint['model'])
     evaluator = create_supervised_evaluator(model, metrics={'IQA_performance': QAPerformance()}, device=device)
     evaluator.run(test_loader)
@@ -40,12 +35,12 @@ if __name__ == "__main__":
     parser.add_argument("--exp_id", type=int, default=0,
                         help='the exp split idx (default: 0)')
     parser.add_argument("--model", type=str, default='IQA')
-    parser.add_argument('--arch', default='resnet50', type=str,
-                        help='arch name (default: ... resnext101_32x8d)')
+    parser.add_argument('--arch', default='resnext101_32x8d', type=str,
+                        help='arch name (resnext101_32x8d)')
     parser.add_argument('--pool_mode', default='mean', type=str,
-                        help='pool mode (default: mean, ..., mean+std, std)')
+                        help='pool mode (default: mean)')
     parser.add_argument('-pretrained', '--pretrained', type=int, default=1,
-                        help='fe network init mode (default: 0 for default random, 1 for ImageNet-pretrained)')
+                        help='fe network init mode, 0 for default random, 1 for ImageNet-pretrained (default: 1)')
     parser.add_argument('-lr', '--lr', type=float, default=1e-4,
                         help='learning rate (default: 1e-4)')
     parser.add_argument('-bs', '--batch_size', type=int, default=8,
@@ -70,7 +65,6 @@ if __name__ == "__main__":
                         help='Allow randomness during training?') 
     parser.add_argument('-debug', '--debug', action='store_true',
                         help='Debug?') 
-    
     parser.add_argument('--trained_model_file', default=None, type=str,
                         help='trained_model_file')
     

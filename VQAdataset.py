@@ -106,4 +106,3 @@ def get_data_loaders(args):
     test_loader = torch.utils.data.DataLoader(test_dataset, batch_size=2*args.batch_size)
 
     return train_loader, val_loader, test_loader
-
