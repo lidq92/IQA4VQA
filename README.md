@@ -23,7 +23,7 @@ python test_IQAdataset.py -pretrained 0 -ft_lr_ratio 0.0 --arch resnet50; python
 python test_IQAdataset.py -pretrained 0 -ft_lr_ratio 0.0 --arch resnext101_32x8d; python test_IQAdataset.py -pretrained 1 -ft_lr_ratio 0.0 --arch resnext101_32x8d; python test_IQAdataset.py -pretrained 0 -ft_lr_ratio 1.0 --arch resnext101_32x8d; python test_IQAdataset.py -pretrained 1 -ft_lr_ratio 0.1 --arch resnext101_32x8d
 ```
 
-## 2. Feature extraction for VQA
+## 2. Feature Extraction for VQA
 ```bash
  for i in $(seq 0 3); do python FeatureExtractor.py --arch resnet50 -fim $i; done
 ```
