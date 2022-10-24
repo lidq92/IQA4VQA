@@ -1,6 +1,20 @@
 # Best Practices for Initializing Image and Video Quality Assessment Models
 This repo is largely borrowed from [LinearityIQA](https://github.com/lidq92/LinearityIQA).
 
+**Requirements**:
+- python==3.6.9
+- torch==1.8.1 (with cuda v10.2, cudnn v7.6)
+- torchvision==0.9.1
+- pytorch-ignite==0.4.2
+- h5py==2.10.0
+- matplotlib==3.1.3
+- numpy==1.18.1
+- pandas==0.25.3
+- Pillow==6.2.1
+- scikit-learn==0.24.1
+- scikit-video==1.1.11
+- scipy==1.5.4
+
 ## 0. Downloading and Linking the Datasets
 ```bash
 ln -s KonIQ-10k_database_path KonIQ-10k
