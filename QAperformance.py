@@ -12,8 +12,6 @@ class QAPerformance(Metric):
         y_pred, y = output
         self._yp.extend(list(y_pred.to('cpu').numpy()))
         self._y.extend(list(y.to('cpu').numpy()))
-        # self._yp.extend([t.item() for t in y_pred])
-        # self._y.extend([t.item() for t in y])
 
     def compute(self):
         sq = np.reshape(np.asarray(self._y), (-1,))
@@ -21,7 +19,7 @@ class QAPerformance(Metric):
 
         SROCC = spearmanr(sq, pq)[0]
         KROCC = kendalltau(sq, pq)[0]
-        # TODO: nonlinear mapping
+        # TODO: 4-parameter logistic nonlinear mapping (for cross-dataset evaluation)
         PLCC = pearsonr(sq, pq)[0]
         # RMSE = np.sqrt(np.power(sq-pq, 2).mean())
         return {'SROCC': SROCC,
