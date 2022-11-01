@@ -1,5 +1,5 @@
 import numpy as np
-from scipy import stats
+from scipy.stats import pearsonr, spearmanr, kendalltau
 from ignite.metrics.metric import Metric
 
 
@@ -19,10 +19,10 @@ class QAPerformance(Metric):
         sq = np.reshape(np.asarray(self._y), (-1,))
         pq = np.reshape(np.asarray(self._yp), (-1,))
 
-        SROCC = stats.spearmanr(sq, pq)[0]
-        KROCC = stats.stats.kendalltau(sq, pq)[0]
+        SROCC = spearmanr(sq, pq)[0]
+        KROCC = kendalltau(sq, pq)[0]
         # TODO: nonlinear mapping
-        PLCC = stats.pearsonr(sq, pq)[0]
+        PLCC = pearsonr(sq, pq)[0]
         # RMSE = np.sqrt(np.power(sq-pq, 2).mean())
         return {'SROCC': SROCC,
                 'KROCC': KROCC,
