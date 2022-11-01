@@ -1,6 +1,6 @@
 import numpy as np
-from scipy.stats import pearsonr, spearmanr, kendalltau
 from ignite.metrics.metric import Metric
+from scipy.stats import pearsonr, spearmanr, kendalltau
 
 
 class QAPerformance(Metric):
