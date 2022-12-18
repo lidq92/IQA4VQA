@@ -64,8 +64,8 @@ for k, arch in enumerate(archs):
 
 
 # Table I intra-iqa
-archs = ['resnet18', 'resnet34', 'resnet50', 'resnext101_32x8d']
-Archs = ['ResNet18', 'ResNet34', 'ResNet50', 'ResNeXt101']
+archs = ['resnet18', 'resnet34', 'resnet50', 'resnext101_32x8d', 'alexnet', 'vgg16', 'googlenet']
+Archs = ['ResNet18', 'ResNet34', 'ResNet50', 'ResNeXt101', 'AlexNet', 'VGG16', 'GoogleNet']
 pool = 'mean'
 pretrained = [0, 1, 0, 1]
 ftlrr = [0.0, 0.0, 1.0, 0.1]

@@ -7,10 +7,19 @@ from torchvision import models
 class QAModel(nn.Module):
     def __init__(self, arch='resnet50', pretrained=True, pool_mode='mean', reduced_size=256, hidden_size=64, num_layers=2, returnFeature=False):
         super(QAModel, self).__init__()
-        features = list(models.__dict__[arch](pretrained=pretrained).children())[:-2]
+        assert('res' in arch or 'alexnet' in arch or 'vgg' in arch or 'googlenet' in arch)
+        if not pretrained and 'googlenet' in arch: 
+            features = list(models.__dict__[arch](pretrained=pretrained,init_weights=True).children())[:-2]
+        else:
+            features = list(models.__dict__[arch](pretrained=pretrained).children())[:-2]
+        if 'res' in arch: # ResNet-like arch.
+            input_size = features[-1][-1].conv1.in_channels # 
+        elif 'alexnet' in arch or 'vgg' in arch:
+            input_size = features[-1][-3].in_channels # 
+        elif 'googlenet' in arch:
+            input_size = 1024 # 
+            features = features[:-1] if pretrained else features[:-3]
         self.features = nn.Sequential(*features)
-        assert('res' in arch) # ResNet-like arch.
-        input_size = features[-1][-1].conv1.in_channels # 
         if pool_mode == 'mean+std':
             input_size = 2 * input_size
         self.pool = nn.AdaptiveAvgPool2d(1)
