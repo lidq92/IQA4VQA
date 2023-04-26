@@ -1,6 +1,9 @@
 # Best Practices for Initializing Image and Video Quality Assessment Models
 This repo is largely borrowed from [LinearityIQA](https://github.com/lidq92/LinearityIQA).
 
+**TODO**
+- Upload the technical report (*.pdf)
+
 **Requirements**:
 - python==3.6.9
 - torch==1.8.1 (with cuda v10.2, cudnn v7.6)
