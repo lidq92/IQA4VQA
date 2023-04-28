@@ -17,11 +17,11 @@ class IQADataset(Dataset):
         index_rd = index[:, args.exp_id % index.shape[1]]
         ref_ids = Info['ref_ids'][0, :]
         if status == 'train':
-            index = index[0:int(args.train_ratio * len(index))]
+            index = index_rd[0:int(args.train_ratio * len(index))]
         elif status == 'val':
-            index = index[int(args.train_ratio * len(index)):int(args.train_and_val_ratio * len(index))]
+            index = index_rd[int(args.train_ratio * len(index)):int(args.train_and_val_ratio * len(index))]
         elif status == 'test':
-                index = index[int(args.train_and_val_ratio * len(index)):len(index)]
+                index = index_rd[int(args.train_and_val_ratio * len(index)):len(index)]
         self.index = []
         for i in range(len(ref_ids)):
             if ref_ids[i] in index:
