@@ -1,9 +1,6 @@
 # Best Practices for Initializing Image and Video Quality Assessment Models
 This repo is largely borrowed from [LinearityIQA](https://github.com/lidq92/LinearityIQA).
 
-**TODO**
-- Upload the technical report (*.pdf)
-
 **Requirements**:
 - python==3.6.9
 - torch==1.8.1 (with cuda v10.2, cudnn v7.6)
@@ -71,4 +68,17 @@ for i in $(seq 0 3); do python test_VQAdataset.py --arch resnet50 -fim $i -rim 1
 ```bash
 cd analysis
 python results_analysis.py # You need to download and rename the csv files which contain data in the TensorBoard writer.
+```
+
+## Cite
+Our technical report is provided [here](IQA4VQA.pdf). If you find this useful, please kindly cite it.
+```bibtex
+@techreport{li2022iqa4vqa,
+     title = {Initialize and Train a Unified Quality Assessment Model for Images/Videos in the Wild},
+     author = {Dingquan Li and Haiqiang Wang and Wei Gao and Ge Li},
+     year = {2022},
+     pages = {1--10},
+     institution = {Peng Cheng Laboratory},
+     url = {https://github.com/lidq92/IQA4VQA}
+}
 ```
